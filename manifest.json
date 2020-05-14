@@ -3,7 +3,7 @@
   "name": "DocVersionRedirector",
   "description": "Automatically redirect to a specific documentation version",
   "author": "Leo Shklovskii",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -11,15 +11,18 @@
     "256": "icons/icon256.png"
   },
   "page_action": {
-    "default_icon": "icons/icon16.png",
+    "default_icon": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png",
+        "256": "icons/icon256.png"
+    },
     "default_title": "DocVersionRedirector",
     "default_popup": "popup.html"
   },
   "background": {
     "scripts": [
-      "vendor/chrome-extension-async.js",
-      "sites.js",
-      "background.js"
+      "js/background.js"
     ]
   },
   "content_scripts": [
@@ -31,7 +34,7 @@
         "*://docs.python.org/*"
       ],
       "js": [
-        "content.js"
+        "js/content.js"
       ],
       "run_at": "document_start"
     }
