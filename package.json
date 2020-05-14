@@ -1,0 +1,40 @@
+{
+  "name": "doc-version-redirector",
+  "version": "0.9.0",
+  "description": "Chrome (&amp; maybe Firefox) extension to redirect to the right version of docs for several sites:",
+  "main": "background.js",
+  "scripts": {
+    "build": "webpack --config webpack.prod.js",
+    "dev": "webpack --config webpack.dev.js",
+    "watch": "webpack -w --config webpack.dev.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leos/DocsVersionRedirector.git"
+  },
+  "keywords": [],
+  "author": "Leo Shklovskii",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leos/DocsVersionRedirector/issues"
+  },
+  "homepage": "https://github.com/leos/DocsVersionRedirector#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.32.0",
+    "@typescript-eslint/parser": "^2.32.0",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.1.1",
+    "eslint": "^6.0.0",
+    "json-schema": "^0.2.5",
+    "sass-loader": "^8.0.2",
+    "ts-loader": "^7.0.4",
+    "typescript": "^3.8.3",
+    "typescript-tuple": "^2.2.1",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-merge": "^4.2.2"
+  },
+  "dependencies": {
+    "webextension-polyfill-ts": "^0.15.0"
+  }
+}
