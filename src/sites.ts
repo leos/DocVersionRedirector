@@ -1,4 +1,11 @@
 export const sites = {
+    'airflow.apache.org': {
+        regex: /^\/docs\/(?<version>[^/]*)\/(?<path>.*)/,
+        template: '/docs/${version}/${path}',
+        options: {
+            version: ['stable','1.10.10','1.10.9','1.10.8','1.10.7','1.10.6','1.10.5','1.10.4','1.10.3','1.10.2','1.10.1']
+        }
+    },
     'docs.ansible.com': {
         regex: /^\/ansible\/(?<version>[^/]*)\/(?<path>.*)/,
         template: '/ansible/${version}/${path}',
