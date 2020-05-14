@@ -28,6 +28,7 @@
   "content_scripts": [
     {
       "matches": [
+        "*://airflow.apache.org/docs/*",
         "*://docs.ansible.com/*",
         "*://docs.bazel.build/*",
         "*://docs.djangoproject.com/*",
