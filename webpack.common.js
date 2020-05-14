@@ -9,8 +9,8 @@ module.exports = {
         content: path.join(__dirname, 'src', 'content.ts'),
     },
     output: {
-        path: path.join(__dirname, 'dist', 'js'),
-        filename: '[name].js',
+        path: path.join(__dirname, 'dist'),
+        filename: 'js/[name].js'
     },
     module: {
         rules: [
@@ -37,9 +37,9 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(),
         new CopyPlugin([
-            {from: '**/*', to: '../', context: 'static/'},
-            {from: '**/*.html', to: '../', context: 'src/'},
-            {from: 'manifest.json', to: '../'},
+            {from: '**/*', context: 'static/'},
+            {from: '**/*.html', context: 'src/'},
+            {from: 'manifest.json'},
         ]),
     ],
     resolve: {
