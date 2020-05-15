@@ -3,8 +3,19 @@ import { browser } from 'webextension-polyfill-ts'
 
 const blog = browser.extension.getBackgroundPage().console.log
 
+interface SitePreference {
+    enabled: boolean
+    lang: string
+    version: string
+    [key: string]: boolean | string
+}
+
+interface Preferences {
+    [key: string]: SitePreference
+}
+
 class Prefs {
-    private prefs
+    private prefs: Preferences = {}
     private static instance: Prefs
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -38,17 +49,17 @@ class Prefs {
         return this.prefs[sitename].enabled
     }
 
-    forSite(sitename: string) {
+    forSite(sitename: string): SitePreference {
         return this.prefs[sitename]
     }
 
-    getPrefs() {
+    getPrefs(): Preferences {
         return this.prefs
     }
 
     async updateValue(site: string, name: string, value: any): Promise<void> {
         this.prefs[site][name] = value
-        return browser.storage.local.set({ prefs: this.prefs })
+        await browser.storage.local.set({ prefs: this.prefs })
     }
 }
 

@@ -11,13 +11,13 @@ setUp()
 async function setUp(): Promise<void> {
     prefs = await Prefs.getInstance()
     const tab = (await browser.tabs.query({ active: true, currentWindow: true }))[0]
-    const hostname = new URL(tab.url).hostname
+    const hostname = new URL(tab.url as string).hostname
     const sitePrefs = prefs.forSite(hostname)
 
     // Inputs
     const enabledCheckbox = document.getElementById('enabledInput') as HTMLInputElement
     enabledCheckbox.checked = sitePrefs.enabled
-    enabledCheckbox.addEventListener('change', (e) =>
+    enabledCheckbox.addEventListener('change', e =>
         browser.runtime.sendMessage({
             action: 'changeSetting',
             site: hostname,
@@ -34,11 +34,11 @@ async function setUp(): Promise<void> {
         const input = document.getElementById(`${name}Input`) as HTMLSelectElement
         const options = Sites.getDefinition(site).options[name] || []
 
-        document.getElementById(`${name}Div`).style.display = options.length ? 'block' : 'none'
+        document.getElementById(`${name}Div`)!.style.display = options.length ? 'block' : 'none'
 
-        options.map((o: string) => input.add(new Option(o, o)))
-        input.value = sitePrefs[name]
-        input.addEventListener('change', (e) => {
+        options.map(o => input.add(new Option(o, o)))
+        input.value = sitePrefs[name] as string
+        input.addEventListener('change', e => {
             browser.runtime.sendMessage({
                 action: 'changeSetting',
                 site: site,
