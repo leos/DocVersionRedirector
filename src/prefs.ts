@@ -1,5 +1,5 @@
+import Sites from './sites'
 import { browser } from 'webextension-polyfill-ts'
-import { sites } from './sites'
 
 const blog = browser.extension.getBackgroundPage().console.log
 
@@ -21,11 +21,12 @@ class Prefs {
     async loadAndRefreshPreferences(): Promise<void> {
         const { prefs } = await browser.storage.local.get({ prefs: {} })
 
-        for (const name in sites) {
+        for (const name of Sites.getSiteNames()) {
+            const siteOptions = Sites.getDefinition(name).options
             prefs[name] = prefs[name] || {
                 enabled: true,
-                lang: sites[name].options.lang && sites[name].options.lang[0],
-                version: sites[name].options.version && sites[name].options.version[0],
+                lang: siteOptions.lang && siteOptions.lang[0],
+                version: siteOptions.version && siteOptions.version[0],
             }
         }
 

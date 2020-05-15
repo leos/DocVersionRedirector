@@ -1,6 +1,6 @@
 const path = require('path')
 const CopyPlugin = require('copy-webpack-plugin')
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 module.exports = {
     entry: {
@@ -10,7 +10,7 @@ module.exports = {
     },
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: 'js/[name].js'
+        filename: 'js/[name].js',
     },
     module: {
         rules: [
@@ -44,8 +44,8 @@ module.exports = {
     ],
     resolve: {
         alias: {
-            "webextension-polyfill-ts": path.resolve(path.join(__dirname, "node_modules", "webextension-polyfill-ts")),
-            "webextension-polyfill": path.resolve(path.join(__dirname, "node_modules", "webextension-polyfill"))
+            'webextension-polyfill-ts': path.resolve(path.join(__dirname, 'node_modules', 'webextension-polyfill-ts')),
+            'webextension-polyfill': path.resolve(path.join(__dirname, 'node_modules', 'webextension-polyfill')),
         },
         modules: [
             path.resolve(__dirname, 'src'),
