@@ -4,7 +4,7 @@ import Sites, { SiteDefinition } from './sites'
 import { browser } from 'webextension-polyfill-ts'
 
 const blog = browser.extension.getBackgroundPage().console.log
-let prefs
+let prefs: Prefs
 Prefs.getInstance().then(doSetup)
 
 function doSetup(preferences: Prefs): void {
@@ -31,11 +31,13 @@ function doSetup(preferences: Prefs): void {
 
     browser.runtime.onMessage.addListener((message, sender) => {
         if (message.action === 'checkForRedirect') {
-            checkForRedirect(new URL(sender.tab.url), sender.tab.id)
+            checkForRedirect(new URL(sender.tab!.url!), sender.tab!.id!)
         } else if (message.action === 'changeSetting') {
             prefs
                 .updateValue(message.site, message.name, message.value)
-                .then(browser.tabs.get(message.tabID).then((tab) => checkForRedirect(new URL(tab.url), tab.id)))
+                .then( _ =>
+                    browser.tabs.get(message.tabID).then(tab => checkForRedirect(new URL(tab.url!), tab.id!))
+                )
         }
     })
 }
@@ -43,7 +45,8 @@ function doSetup(preferences: Prefs): void {
 function getRedirectURL(oldURL: URL): string {
     const { protocol, hostname, host } = oldURL
     const sitePrefs = prefs.forSite(hostname)
-    const matches = sitePrefs.regex.exec(oldURL.pathname + oldURL.search + oldURL.hash)
+    const siteDef = Sites.getDefinition(hostname)
+    const matches = siteDef.regex.exec(oldURL.pathname + oldURL.search + oldURL.hash)
 
     return matches
         ? `${protocol}//${host}` +
@@ -52,7 +55,7 @@ function getRedirectURL(oldURL: URL): string {
                   .replace('${version}', sitePrefs.version)
                   .replace(
                       '${path}',
-                      rewritePath(sitePrefs, matches.groups.version, sitePrefs.version, matches.groups.path),
+                      rewritePath(siteDef, matches.groups!.version, sitePrefs.version, matches.groups!.path),
                   )
         : oldURL.href
 }

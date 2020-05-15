@@ -1,18 +1,22 @@
-class SiteOptions {
+interface SiteOptionsVersion {
     version: string[]
-    lang?: string[]
+    [key: string]: string[]
 }
 
-class SiteMove {
+interface SiteOptionsFull extends SiteOptionsVersion {
+    lang: string[]
+}
+
+interface SiteMove {
     version: string
     before: string
     after: string
 }
 
-export class SiteDefinition {
+export interface SiteDefinition {
     regex: RegExp
     template: string
-    options: SiteOptions
+    options: SiteOptionsVersion | SiteOptionsFull
     moves?: SiteMove[]
 }
 
