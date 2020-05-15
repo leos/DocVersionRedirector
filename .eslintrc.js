@@ -8,6 +8,8 @@ module.exports = {
         'eslint:recommended',
         'plugin:@typescript-eslint/eslint-recommended',
         'plugin:@typescript-eslint/recommended',
+        'prettier/@typescript-eslint',
+        'plugin:prettier/recommended',
     ],
     'globals': {
         'Atomics': 'readonly',
@@ -34,7 +36,13 @@ module.exports = {
             'error',
             'unix',
         ],
-        'ordered-imports': true,
+        'no-empty-function':
+            ["error",
+            { "allow": ["constructors"] }
+        ],
+        'sort-imports': [
+            'error',
+        ],
         'quotes': [
             'error',
             'single',
