@@ -1,25 +1,29 @@
-import { sites } from './sites'
-import { browser } from "webextension-polyfill-ts";
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import Prefs from './prefs'
+import { browser } from 'webextension-polyfill-ts'
+import { sites } from './sites'
 
-let blog = browser.extension.getBackgroundPage().console.log
+const blog = browser.extension.getBackgroundPage().console.log
 let prefs
-Prefs.getInstance().then(doSetup);
+Prefs.getInstance().then(doSetup)
 
-function doSetup(preferences: Prefs) {
+function doSetup(preferences: Prefs): void {
     prefs = preferences
 
     // If page has been visited (via localStorage cache) and we're going to redirect anyways, do it immediately.
-     browser.webRequest.onBeforeRequest.addListener(
-        function ({url}) {
+    browser.webRequest.onBeforeRequest.addListener(
+        function ({ url }) {
             const oldURLObject = new URL(url)
             const newUrl = getRedirectURL(oldURLObject)
 
-            return prefs.enabled(oldURLObject.hostname) && (oldURLObject.href !== newUrl) && localStorage.getItem(`cache-${newUrl}`)
-                ? {redirectUrl: newUrl} : {}
+            return prefs.enabled(oldURLObject.hostname) &&
+                oldURLObject.href !== newUrl &&
+                localStorage.getItem(`cache-${newUrl}`)
+                ? { redirectUrl: newUrl }
+                : {}
         },
         {
-            urls: Object.keys(sites).map(hostname => `*://${hostname}/*`),
+            urls: Object.keys(sites).map((hostname) => `*://${hostname}/*`),
             types: ['main_frame'],
         },
         ['blocking'],
@@ -29,32 +33,33 @@ function doSetup(preferences: Prefs) {
         if (message.action === 'checkForRedirect') {
             checkForRedirect(new URL(sender.tab.url), sender.tab.id)
         } else if (message.action === 'changeSetting') {
-            prefs.updateValue(message.site, message.name, message.value).then(
-                browser.tabs.get(message.tabID).then(
-                    tab => checkForRedirect(new URL(tab.url), tab.id)
-                )
-            )
+            prefs
+                .updateValue(message.site, message.name, message.value)
+                .then(browser.tabs.get(message.tabID).then((tab) => checkForRedirect(new URL(tab.url), tab.id)))
         }
     })
 }
 
-function getRedirectURL(oldURL: URL) {
-
-    const {protocol, hostname, host} = oldURL
+function getRedirectURL(oldURL: URL): string {
+    const { protocol, hostname, host } = oldURL
     const matches = sites[hostname].regex.exec(oldURL.pathname + oldURL.search + oldURL.hash)
-    const site_prefs = prefs.forSite(hostname)
+    const sitePrefs = prefs.forSite(hostname)
 
     return matches
-        ? `${protocol}//${host}` + sites[hostname].template
-            .replace('${lang}', site_prefs.lang)
-            .replace('${version}', site_prefs.version)
-            .replace('${path}', rewritePath(sites[hostname], matches.groups.version, site_prefs.version, matches.groups.path))
+        ? `${protocol}//${host}` +
+              sites[hostname].template
+                  .replace('${lang}', sitePrefs.lang)
+                  .replace('${version}', sitePrefs.version)
+                  .replace(
+                      '${path}',
+                      rewritePath(sites[hostname], matches.groups.version, sitePrefs.version, matches.groups.path),
+                  )
         : oldURL.href
 }
 
-function rewritePath({moves = [], options: {version: versions}}, oldVersion, newVersion, path) {
+function rewritePath({ moves = [], options: { version: versions } }, oldVersion, newVersion, path): string {
     const move = moves.find(
-        ({version: moveVersion, before}) =>
+        ({ version: moveVersion, before }) =>
             versions.indexOf(oldVersion) > versions.indexOf(moveVersion) &&
             versions.indexOf(newVersion) <= versions.indexOf(moveVersion) &&
             path === before,
@@ -63,15 +68,15 @@ function rewritePath({moves = [], options: {version: versions}}, oldVersion, new
     return move ? move.after : path
 }
 
-async function checkForRedirect(oldURL: URL, tabId: number) {
+async function checkForRedirect(oldURL: URL, tabId: number): Promise<void> {
     browser.pageAction.show(tabId)
     if (prefs.enabled(oldURL.hostname)) {
         const newUrl = getRedirectURL(oldURL)
         if (oldURL.href !== newUrl) {
-            const response = await fetch(newUrl, {method: 'HEAD'})
+            const response = await fetch(newUrl, { method: 'HEAD' })
             if (response.ok) {
                 localStorage.setItem(`cache-${newUrl}`, '1')
-                await browser.tabs.update(tabId, {url: newUrl})
+                await browser.tabs.update(tabId, { url: newUrl })
             } else {
                 // set icon to yellow
                 blog(`HEAD request error: ${response.statusText}`)
