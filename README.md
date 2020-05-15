@@ -1,6 +1,6 @@
 # ![icon](https://raw.githubusercontent.com/leos/DocsVersionRedirector/master/static/icons/icon48.png) DocsVersionRedirector
 
-Chrome & Firefox extension to redirect to the right version of docs for several sites:
+Chrome extension to redirect to the right version of docs for several sites:
 
 Project | Site
 --------|-----

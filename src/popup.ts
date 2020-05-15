@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import Prefs from './prefs'
+import Sites from './sites'
 import { browser } from 'webextension-polyfill-ts'
-import { sites } from './sites'
 
 const blog = browser.extension.getBackgroundPage().console.log
 
@@ -32,7 +32,7 @@ async function setUp(): Promise<void> {
 
     function setupChoice(name: string, site: string): void {
         const input = document.getElementById(`${name}Input`) as HTMLSelectElement
-        const options = sites[site].options[name] || []
+        const options = Sites.getDefinition(site).options[name] || []
 
         document.getElementById(`${name}Div`).style.display = options.length ? 'block' : 'none'
 

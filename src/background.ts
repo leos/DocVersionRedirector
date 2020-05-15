@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import Prefs from './prefs'
+import Sites, { SiteDefinition } from './sites'
 import { browser } from 'webextension-polyfill-ts'
-import { sites } from './sites'
 
 const blog = browser.extension.getBackgroundPage().console.log
 let prefs
@@ -23,7 +23,7 @@ function doSetup(preferences: Prefs): void {
                 : {}
         },
         {
-            urls: Object.keys(sites).map((hostname) => `*://${hostname}/*`),
+            urls: Sites.getSiteNames().map((hostname) => `*://${hostname}/*`),
             types: ['main_frame'],
         },
         ['blocking'],
@@ -42,22 +42,27 @@ function doSetup(preferences: Prefs): void {
 
 function getRedirectURL(oldURL: URL): string {
     const { protocol, hostname, host } = oldURL
-    const matches = sites[hostname].regex.exec(oldURL.pathname + oldURL.search + oldURL.hash)
     const sitePrefs = prefs.forSite(hostname)
+    const matches = sitePrefs.regex.exec(oldURL.pathname + oldURL.search + oldURL.hash)
 
     return matches
         ? `${protocol}//${host}` +
-              sites[hostname].template
-                  .replace('${lang}', sitePrefs.lang)
+              Sites.getDefinition(hostname)
+                  .template.replace('${lang}', sitePrefs.lang)
                   .replace('${version}', sitePrefs.version)
                   .replace(
                       '${path}',
-                      rewritePath(sites[hostname], matches.groups.version, sitePrefs.version, matches.groups.path),
+                      rewritePath(sitePrefs, matches.groups.version, sitePrefs.version, matches.groups.path),
                   )
         : oldURL.href
 }
 
-function rewritePath({ moves = [], options: { version: versions } }, oldVersion, newVersion, path): string {
+function rewritePath(
+    { moves = [], options: { version: versions } }: SiteDefinition,
+    oldVersion: string,
+    newVersion: string,
+    path: string,
+): string {
     const move = moves.find(
         ({ version: moveVersion, before }) =>
             versions.indexOf(oldVersion) > versions.indexOf(moveVersion) &&
