@@ -3,7 +3,7 @@
   "name": "DocVersionRedirector",
   "description": "Automatically redirect to a specific documentation version",
   "author": "Leo Shklovskii",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
