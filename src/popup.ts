@@ -1,26 +1,19 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
-import Prefs, {SitePreference} from './prefs'
-import Sites from './sites'
+import Sites, {SiteDefinition} from './sites'
 import {browser} from 'webextension-polyfill-ts'
 
 const blog = browser.extension.getBackgroundPage().console.log
-blog('hihi')
-let prefs
-setUp().then()
+
+setUp()
 
 async function setUp(): Promise<void> {
-    prefs = await Prefs.getInstance()
-    const tab = (
-        await browser.tabs.query({active: true, currentWindow: true})
-    )[0]
+    const sites = await Sites.getInstance()
+    const tab = (await browser.tabs.query({active: true, currentWindow: true}))[0]
     const hostname = new URL(tab.url as string).hostname
-    const sitePrefs = prefs.forSite(hostname)
+    const siteDef = sites.getSite(hostname)
 
     // Inputs
-    const enabledCheckbox = document.getElementById(
-        'enabledInput'
-    ) as HTMLInputElement
-    enabledCheckbox.checked = sitePrefs.enabled
+    const enabledCheckbox = document.getElementById('enabledInput') as HTMLInputElement
+    enabledCheckbox.checked = siteDef.settings.enabled
     enabledCheckbox.addEventListener('change', e =>
         browser.runtime.sendMessage({
             action: 'changeSetting',
@@ -32,26 +25,24 @@ async function setUp(): Promise<void> {
     )
 
     await Promise.all([
-        setupChoice('version', hostname, sitePrefs, tab.id!),
-        setupChoice('lang', hostname, sitePrefs, tab.id!),
+        setupChoice('version', hostname, siteDef, tab.id!),
+        setupChoice('lang', hostname, siteDef, tab.id!),
     ])
 }
 
 async function setupChoice(
     name: string,
     site: string,
-    sitePrefs: SitePreference,
+    siteDef: SiteDefinition,
     tabID: number
 ): Promise<void> {
     const input = document.getElementById(`${name}Input`) as HTMLSelectElement
-    const options = Sites.getDefinitionLocal(site).options[name] || []
+    const options = siteDef.options[name] || []
 
-    document.getElementById(`${name}Div`)!.style.display = options.length
-        ? 'block'
-        : 'none'
+    document.getElementById(`${name}Div`)!.style.display = options.length ? 'block' : 'none'
 
     options.map(o => input.add(new Option(o, o)))
-    input.value = sitePrefs[name] as string
+    input.value = siteDef.settings[name] as string
     input.addEventListener('change', e => {
         browser.runtime.sendMessage({
             action: 'changeSetting',
