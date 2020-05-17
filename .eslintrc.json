@@ -18,16 +18,20 @@
     }],
     "quotes": "off"
   },
-  "overrides": [
-    {
-      "env": {
-        "node": true
-      },
-      "files": ["*.js"],
-      "rules": {
-        "node/no-unpublished-require": ["off"]
-        // '@typescript-eslint/no-var-requires': ['off']
-      }
+  "overrides": [{
+    "env": {
+      "node": true
+    },
+    "files": ["*.js"],
+    "rules": {
+      "node/no-unpublished-require": ["off"]
+      // '@typescript-eslint/no-var-requires': ['off']
     }
-  ]
+  },
+  {
+    "env": {
+      "jest": true
+    },
+    "files": ["src/test/*.ts"]
+  }]
 }
