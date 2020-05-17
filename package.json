@@ -5,7 +5,9 @@
   "engines": {
     "node": ">=13.0.0"
   },
-  "eslintIgnore": ["dist/"],
+  "eslintIgnore": [
+    "dist/"
+  ],
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "dev": "webpack --config webpack.dev.js",
@@ -30,8 +32,8 @@
   "devDependencies": {
     "@types/jest": "^25.2.2",
     "@types/node": "^13.11.1",
-    "@typescript-eslint/eslint-plugin": "^2.32.0",
-    "@typescript-eslint/parser": "^2.32.0",
+    "@typescript-eslint/eslint-plugin": "^2.33.0",
+    "@typescript-eslint/parser": "^2.33.0",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.1.1",
     "eslint": "^6.0.0",
@@ -50,6 +52,5 @@
     "webpack-merge": "^4.2.2",
     "zip-webpack-plugin": "^3.0.0"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

@@ -14,82 +14,140 @@ interface SiteMove {
     after: string
 }
 
-export interface SiteDefinition {
-    regex: RegExp
+export interface SiteSettings {
+    enabled: boolean
+    lang: string
+    version: string
+    [key: string]: boolean | string
+}
+
+export interface SiteDefinitionNoSettings {
+    regex: string
     template: string
     options: SiteOptionsVersion | SiteOptionsFull
     moves?: SiteMove[]
 }
 
+export interface SiteDefinition extends SiteDefinitionNoSettings {
+    settings: SiteSettings
+}
+
+interface SitesData {
+    [key: string]: SiteDefinition
+}
+
 const blog = browser.extension.getBackgroundPage().console.log
+
 class SiteConfig {
     private static instance: SiteConfig
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     private constructor() {}
 
-    static getInstance(): SiteConfig {
-        if (!SiteConfig.instance) {
+    static async getInstance(force = false): Promise<SiteConfig> {
+        if (!SiteConfig.instance || force) {
             SiteConfig.instance = new SiteConfig()
+            await SiteConfig.instance.loadAndApplyDefaultSettings()
         }
         return SiteConfig.instance
     }
 
-    async checkForDynamicConfig(hostname: string): Promise<boolean> {
-        if (hostname in this.data) return false
+    static getInstanceLocal(): SiteConfig {
+        return SiteConfig.instance
+    }
+
+    private sites: SitesData = {}
+
+    async checkForDynamicConfig(hostname: string): Promise<void> {
+        if (hostname in this.sites) return
 
         if (hostname.endsWith('readthedocs.io')) {
-            blog('detected rtd')
             const response = await fetch(
-                `https://readthedocs.org/projects/${hostname.split(
-                    '.',
-                    1
-                )}/versions/`,
+                `https://readthedocs.org/projects/${hostname.split('.', 1)}/versions/`,
                 {mode: 'no-cors'}
             )
-            blog(response)
             if (!response.ok) {
                 const responseText = await response.text()
                 blog(response.status)
                 blog(responseText)
-                return false
+                return
             }
-            blog('response ok!')
             const rtd_regex = /class="module-item-title".*>(.*)<\/a>/g
             const responseText = await response.text()
             const matches = responseText.match(rtd_regex)
-            if (!matches) return false
+            if (!matches) return
 
-            this.data[hostname] = {
-                regex: /^\/docs\/(?<version>[^/]*)\/(?<path>.*)/,
+            const newSite = {
+                regex: '^/en/(?<version>[^/]*)/(?<path>.*)',
                 template: '/en/${version}/${path}',
                 options: {
-                    version: [],
+                    version: [] as string[],
                 },
             }
 
             let match
             while ((match = rtd_regex.exec(responseText))) {
-                this.data[hostname].options.version.push(match[1])
-                blog(`adding version ${match[1]}`)
+                newSite.options.version.push(match[1])
             }
 
-            return true
+            this.sites[hostname] = this.setDefaultSettings(newSite)
+
+            await this.saveSites()
+        }
+    }
+
+    private setDefaultSettings(definition: SiteDefinitionNoSettings): SiteDefinition {
+        ;(definition as SiteDefinition).settings = {
+            enabled: true,
+            lang: definition.options.lang && definition.options.lang[0],
+            version: definition.options.version && definition.options.version[0],
+        }
+        return definition as SiteDefinition
+    }
+
+    async loadAndApplyDefaultSettings(): Promise<void> {
+        const {sites: loadedSites} = await browser.storage.local.get({sites: {}})
+        this.sites = {...loadedSites, ...this.hardcodedSites} as SitesData
+
+        for (const definition of Object.values(this.sites)) {
+            if (definition.settings) continue
+            this.setDefaultSettings(definition)
         }
 
-        return false
+        await this.saveSites()
     }
 
-    getDefinitionLocal(hostname: string): SiteDefinition {
-        return this.data[hostname]
+    async saveSites(): Promise<void> {
+        await browser.storage.local.set({sites: this.sites})
     }
+
+    enabled(sitename: string): boolean {
+        return this.getSettings(sitename).enabled
+    }
+
+    getSettings(sitename: string): SiteSettings {
+        return this.getSite(sitename).settings
+    }
+
+    getSite(sitename: string): SiteDefinition {
+        return this.sites[sitename]
+    }
+    getSites(): SitesData {
+        return this.sites
+    }
+
+    async updateValue(site: string, name: string, value: boolean | string): Promise<void> {
+        this.sites[site].settings[name] = value
+        await this.saveSites()
+    }
+
     getSiteNames(): string[] {
-        return Object.keys(this.data)
+        return Object.keys(this.sites)
     }
 
-    private data: {[key: string]: SiteDefinition} = {
+    private hardcodedSites: {[key: string]: SiteDefinitionNoSettings} = {
         'airflow.apache.org': {
-            regex: /^\/docs\/(?<version>[^/]*)\/(?<path>.*)/,
+            regex: '^/docs/(?<version>[^/]*)/(?<path>.*)',
             template: '/docs/${version}/${path}',
             options: {
                 version: [
@@ -108,23 +166,14 @@ class SiteConfig {
             },
         },
         'docs.ansible.com': {
-            regex: /^\/ansible\/(?<version>[^/]*)\/(?<path>.*)/,
+            regex: '^/ansible/(?<version>[^/]*)/(?<path>.*)',
             template: '/ansible/${version}/${path}',
             options: {
-                version: [
-                    'devel',
-                    'latest',
-                    '2.8',
-                    '2.7',
-                    '2.6',
-                    '2.5',
-                    '2.4',
-                    '2.3',
-                ],
+                version: ['devel', 'latest', '2.8', '2.7', '2.6', '2.5', '2.4', '2.3'],
             },
         },
         'docs.bazel.build': {
-            regex: /^\/versions\/(?<version>[^/]*)\/(?<path>.*)/,
+            regex: '^/versions/(?<version>[^/]*)/(?<path>.*)',
             template: '/versions/${version}/${path}',
             options: {
                 version: [
@@ -157,35 +206,15 @@ class SiteConfig {
             },
         },
         'docs.djangoproject.com': {
-            regex: /^\/(?<lang>[^/]*)\/(?<version>[^/]*)\/(?<path>.*)/,
+            regex: '^/(?<lang>[^/]*)/(?<version>[^/]*)/(?<path>.*)',
             template: '/${lang}/${version}/${path}',
             options: {
-                lang: [
-                    'en',
-                    'el',
-                    'es',
-                    'fr',
-                    'id',
-                    'ja',
-                    'ko',
-                    'pl',
-                    'pt-br',
-                    'zh-hans',
-                ],
-                version: [
-                    'dev',
-                    '3.0',
-                    '2.2',
-                    '2.1',
-                    '2.0',
-                    '1.11',
-                    '1.10',
-                    '1.8',
-                ],
+                lang: ['en', 'el', 'es', 'fr', 'id', 'ja', 'ko', 'pl', 'pt-br', 'zh-hans'],
+                version: ['dev', '3.0', '2.2', '2.1', '2.0', '1.11', '1.10', '1.8'],
             },
         },
         'docs.python.org': {
-            regex: /^\/(?<version>[^/]*)\/(?<path>.*)/,
+            regex: '^/(?<version>[^/]*)/(?<path>.*)',
             template: '/${version}/${path}',
             options: {
                 version: ['3', '3.9', '3.8', '3.7', '3.6', '3.5', '2.7'],
@@ -206,4 +235,4 @@ class SiteConfig {
     }
 }
 
-export default SiteConfig.getInstance()
+export default SiteConfig

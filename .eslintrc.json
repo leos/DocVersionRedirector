@@ -16,6 +16,7 @@
           "requireLast": false
         }
     }],
+    "@typescript-eslint/no-unused-vars": "off",
     "quotes": "off"
   },
   "overrides": [{
