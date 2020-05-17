@@ -1,9 +1,9 @@
 import Sites from './sites'
-import { browser } from 'webextension-polyfill-ts'
+import {browser} from 'webextension-polyfill-ts'
 
 const blog = browser.extension.getBackgroundPage().console.log
 
-interface SitePreference {
+export interface SitePreference {
     enabled: boolean
     lang: string
     version: string
@@ -15,8 +15,9 @@ interface Preferences {
 }
 
 class Prefs {
-    private prefs: Preferences = {}
     private static instance: Prefs
+
+    private prefs: Preferences = {}
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     private constructor() {}
@@ -30,10 +31,10 @@ class Prefs {
     }
 
     async loadAndRefreshPreferences(): Promise<void> {
-        const { prefs } = await browser.storage.local.get({ prefs: {} })
+        const {prefs} = await browser.storage.local.get({prefs: {}})
 
         for (const name of Sites.getSiteNames()) {
-            const siteOptions = Sites.getDefinition(name).options
+            const siteOptions = Sites.getDefinitionLocal(name).options
             prefs[name] = prefs[name] || {
                 enabled: true,
                 lang: siteOptions.lang && siteOptions.lang[0],
@@ -41,7 +42,7 @@ class Prefs {
             }
         }
 
-        await browser.storage.local.set({ prefs: prefs })
+        await browser.storage.local.set({prefs: prefs})
         this.prefs = prefs
     }
 
@@ -57,9 +58,13 @@ class Prefs {
         return this.prefs
     }
 
-    async updateValue(site: string, name: string, value: any): Promise<void> {
+    async updateValue(
+        site: string,
+        name: string,
+        value: boolean | string
+    ): Promise<void> {
         this.prefs[site][name] = value
-        await browser.storage.local.set({ prefs: this.prefs })
+        await browser.storage.local.set({prefs: this.prefs})
     }
 }
 
