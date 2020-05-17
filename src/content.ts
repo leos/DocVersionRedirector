@@ -1,3 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 // @ts-ignore
-;(typeof browser === 'undefined' ? chrome : browser).runtime.sendMessage({ action: 'checkForRedirect' })
+// eslint-disable-next-line no-undef
+;(typeof browser === 'undefined' ? chrome : browser).runtime.sendMessage({
+    action: 'checkForRedirect',
+})
