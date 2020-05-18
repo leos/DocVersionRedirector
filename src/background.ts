@@ -1,6 +1,7 @@
 import Sites, {SiteDefinition} from './sites'
 import {browser} from 'webextension-polyfill-ts'
 import pdata = require('./../package.json')
+import manifest = require('./../manifest.json')
 
 const blog = browser.extension.getBackgroundPage().console.log
 
@@ -8,41 +9,42 @@ setUp()
 
 async function setUp(): Promise<void> {
     await ensureConfVersion()
+    await Sites.getInstance()
 
-    const sites = await Sites.getInstance()
     // If page has been visited (via localStorage cache) and we're going to redirect anyways, do it immediately.
     browser.webRequest.onBeforeRequest.addListener(
-        ({url}) => {
-            const oldURLObject = new URL(url)
-            const siteDef = Sites.getInstanceLocal().getSite(oldURLObject.hostname)
-            const newUrl = getRedirectURL(siteDef, oldURLObject)
-
-            return siteDef.settings.enabled &&
-                oldURLObject.href !== newUrl &&
-                localStorage.getItem(`cache-${newUrl}`)
-                ? {redirectUrl: newUrl}
-                : {}
-        },
-        {
-            urls: sites.getSiteNames().map(hostname => `*://${hostname}/*`),
-            types: ['main_frame'],
-        },
+        checkRedirectCache,
+        {urls: manifest.content_scripts[0].matches, types: ['main_frame']},
         ['blocking']
     )
 
-    browser.runtime.onMessage.addListener(async (message, sender) => {
-        if (message.action === 'checkForRedirect') {
-            await checkForRedirect(
-                Sites.getInstanceLocal(),
-                new URL(sender.tab!.url!),
-                sender.tab!.id!
-            )
-        } else if (message.action === 'changeSetting') {
-            await sites.updateValue(message.site, message.name, message.value)
-            const tab = await browser.tabs.get(message.tabID)
-            await checkForRedirect(Sites.getInstanceLocal(), new URL(tab.url!), tab.id!)
-        }
-    })
+    browser.runtime.onMessage.addListener(MessageHandler)
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function MessageHandler(message: any, sender: any) {
+    if (message.action === 'checkForRedirect') {
+        await checkForRedirect(Sites.getInstanceLocal(), new URL(sender.tab!.url!), sender.tab!.id!)
+    } else if (message.action === 'changeSetting') {
+        const [sites, tab] = await Promise.all([
+            Sites.getInstance(),
+            browser.tabs.get(message.tabID),
+        ])
+        await sites.updateValue(message.site, message.name, message.value)
+        await checkForRedirect(sites, new URL(tab.url!), tab.id!)
+    }
+}
+
+function checkRedirectCache({url}: {url: string}) {
+    const oldURLObject = new URL(url)
+    const siteDef = Sites.getInstanceLocal().getSite(oldURLObject.hostname)
+    const newUrl = getRedirectURL(siteDef, oldURLObject)
+
+    return siteDef.settings.enabled &&
+        oldURLObject.href !== newUrl &&
+        localStorage.getItem(`cache-${newUrl}`)
+        ? {redirectUrl: newUrl}
+        : {}
 }
 
 async function ensureConfVersion() {
