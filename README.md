@@ -1,8 +1,12 @@
 # ![icon](https://raw.githubusercontent.com/leos/DocsVersionRedirector/master/static/icons/icon48.png) DocsVersionRedirector
 
-Chrome extension always redirect to the exact version of the documentation that you want. For example, DocsVersionRedirector can automatically redirect: https://docs.python.org/2.7/library/index.html to https://docs.python.org/3.6/library/index.html. This is useful if you seach and end up on some other random version of the docs.
+Chrome extension that redirects you to the exact version of the documentation that you want.
 
-Currently works on:
+For example, DocsVersionRedirector can automatically redirect: https://docs.python.org/2.7/library/index.html to https://docs.python.org/3.6/library/index.html.
+
+This is useful if you search for a page in the docs and end up on some other random version of the docs.
+
+## Supported Sites
 
 | Project     | Site                             | Type      |
 | ----------- | -------------------------------- | --------- |
@@ -20,6 +24,7 @@ For `dynamic` sites the extension will automatically parse the version numbers a
 ## Configuration
 
 <img align="right" src="https://raw.githubusercontent.com/leos/DocsVersionRedirector/master/screenshots/python.png" />
+
 On every site where the extension is active the icon will light up. If you click it you can change the setting for that site.
 
 At the moment the settings will reset on every minor version. If you need to reset them manually, simply uninstall the extension.
@@ -28,14 +33,14 @@ At the moment the settings will reset on every minor version. If you need to res
 
 You can install the latest from the [Chrome Web Store](https://chrome.google.com/webstore/detail/nomnkbngkijpffepcgbbofhcnafpkiep/).
 
-If you want to try it out locally, check out the repo, then:
+If you want to try it out locally, check out this repo, then:
 
 ```
 npm install
 npm run dev
 ```
 
-This will transpile the typescript and assemble the extension into `dist/`.
+This will assemble the extension into `dist/`.
 
 Then go to `chrome://extensions/`, turn on **Developer mode**, click on **Load unpacked** and select the `dist` folder.
 
