@@ -10,6 +10,8 @@ Chrome extension to redirect to the right version of docs for several sites:
 | Django      | docs.djangoproject.com           | hardcoded |
 | Python      | docs.python.org                  | hardcoded |
 | ReadTheDocs | any project on \*.readthedocs.io | dynamic   |
+| RSpec       | rspec.info/documentation         | hardcoded |
+| Ruby Docs   | ruby-doc.org                     | hardcoded |
 
 For `dynamic` sites the extension will automatically parse the version numbers and add a configuration that's saved in local storage.
 
