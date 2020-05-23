@@ -10,10 +10,10 @@
   },
   "page_action": {
     "default_icon": {
-        "16": "icons/icon16.png",
-        "48": "icons/icon48.png",
-        "128": "icons/icon128.png",
-        "256": "icons/icon256.png"
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png",
+      "256": "icons/icon256.png"
     },
     "default_title": "DocVersionRedirector",
     "default_popup": "popup.html"
@@ -29,11 +29,11 @@
         "*://docs.bazel.build/*",
         "*://docs.djangoproject.com/*",
         "*://docs.python.org/*",
+        "*://rspec.info/documentation/*",
+        "*://ruby-doc.org/*",
         "*://*.readthedocs.io/*"
       ],
-      "js": [
-        "js/content.js"
-      ],
+      "js": ["js/content.js"],
       "run_at": "document_start"
     }
   ],

@@ -58,22 +58,22 @@ async function ensureConfVersion() {
 function getRedirectURL(siteDef: SiteDefinition, oldURL: URL): string {
     const {protocol, host} = oldURL
     const matches = new RegExp(siteDef.regex).exec(oldURL.pathname + oldURL.search + oldURL.hash)
+    const {lang, version, path, ...extra_groups} = matches?.groups || {}
 
-    return matches
-        ? `${protocol}//${host}` +
-              siteDef.template
-                  .replace('${lang}', siteDef.settings.lang)
-                  .replace('${version}', siteDef.settings.version)
-                  .replace(
-                      '${path}',
-                      rewritePath(
-                          siteDef,
-                          matches.groups!.version,
-                          siteDef.settings.version,
-                          matches.groups!.path
-                      )
-                  )
-        : oldURL.href
+    if (matches) {
+        let new_template = siteDef.template
+            .replace('${lang}', siteDef.settings.lang)
+            .replace('${version}', siteDef.settings.version)
+            .replace('${path}', rewritePath(siteDef, version, siteDef.settings.version, path))
+
+        for (const [name, value] of Object.entries(extra_groups)) {
+            new_template = new_template.replace(`\${${name}}`, value)
+        }
+
+        return `${protocol}//${host}` + new_template
+    }
+
+    return oldURL.href
 }
 
 function rewritePath(
