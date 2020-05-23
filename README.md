@@ -19,7 +19,9 @@ This is useful if you search for a page in the docs and end up on some other ran
 | RSpec       | rspec.info/documentation         | hardcoded |
 | Ruby Docs   | ruby-doc.org                     | hardcoded |
 
-For `dynamic` sites the extension will automatically parse the version numbers and add a configuration that's saved in local storage. For `hardcoded` adding a new version or a language means the extension needs to be updated. Don't be shy, submit a PR to update the version.
+For `dynamic` sites the extension will automatically parse the version numbers and add a configuration that's saved in local storage.
+
+For `hardcoded` sites adding a new version or a language means the extension needs to be updated. Feel free to submit a PR.
 
 ## Configuration
 
@@ -42,16 +44,16 @@ npm run dev
 
 This will assemble the extension into `dist/`.
 
-Then go to `chrome://extensions/`, turn on **Developer mode**, click on **Load unpacked** and select the `dist` folder.
+Go to `chrome://extensions/`, turn on **Developer mode**, click on **Load unpacked** and select the `dist` folder.
 
 ## Moves
 
 This extension has simple support for pages that move between versions. See the `moves` property for `docs.python.org` in `src/sites.ts`. This is only currently available on `hardcoded` sites.
 
-Please open an issue if you're interested in expanding this support.
+Please [open an issue](https://github.com/leos/DocsVersionRedirector/issues/new) if you're interested in expanding this support.
 
 ## Adding sites
 
-If you'd like to add a site, please submit a PR adding it to the appropriate spot in `src/sites.ts`. In addition, make sure to add a glob for the hostname in `manifest.json`.
+If you'd like to add a `hardcoded` site, please submit a PR adding it to the appropriate spot in `src/sites.ts`. In addition, make sure to add a glob for the hostname in `manifest.json`.
 
-If there's another dynamic site you'd like this extension to work with, please open an issue.
+If there's another `dynamic` site you'd like this extension to work with, please [open an issue](https://github.com/leos/DocsVersionRedirector/issues/new).
