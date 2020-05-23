@@ -37,7 +37,7 @@ npm run dev
 
 This will transpile the typescript and assemble the extension into `dist/`.
 
-Then go to `chrome://extensions/`, click on **Load Unpacked** and select the `dist` folder.
+Then go to `chrome://extensions/`, turn on **Developer Mode**, click on **Load Unpacked** and select the `dist` folder.
 
 ## Moves
 
