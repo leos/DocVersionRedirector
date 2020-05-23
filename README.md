@@ -1,6 +1,8 @@
 # ![icon](https://raw.githubusercontent.com/leos/DocsVersionRedirector/master/static/icons/icon48.png) DocsVersionRedirector
 
-Chrome extension to redirect to the right version of docs for several sites:
+Chrome extension always redirect to the exact version of the documentation that you want. For example, DocsVersionRedirector can automatically redirect: https://docs.python.org/2.7/library/index.html to https://docs.python.org/3.6/library/index.html. This is useful if you seach and end up on some other random version of the docs.
+
+Currently works on:
 
 | Project     | Site                             | Type      |
 | ----------- | -------------------------------- | --------- |
@@ -13,9 +15,7 @@ Chrome extension to redirect to the right version of docs for several sites:
 | RSpec       | rspec.info/documentation         | hardcoded |
 | Ruby Docs   | ruby-doc.org                     | hardcoded |
 
-For `dynamic` sites the extension will automatically parse the version numbers and add a configuration that's saved in local storage.
-
-For example, this will automatically redirect For example: https://docs.python.org/2.7/library/index.html to https://docs.python.org/3.6/library/index.html and then redirect any other pages
+For `dynamic` sites the extension will automatically parse the version numbers and add a configuration that's saved in local storage. For `hardcoded` adding a new version or a language means the extension needs to be updated. Don't be shy, submit a PR to update the version.
 
 ## Configuration
 
