@@ -1,4 +1,6 @@
+import {blog} from './util'
 import {browser} from 'webextension-polyfill-ts'
+
 interface SiteOptionsVersion {
     version: string[]
     [key: string]: string[]
@@ -26,6 +28,7 @@ export interface SiteDefinitionNoSettings {
     template: string
     options: SiteOptionsVersion | SiteOptionsFull
     moves?: SiteMove[]
+    updated?: number
 }
 
 export interface SiteDefinition extends SiteDefinitionNoSettings {
@@ -35,8 +38,6 @@ export interface SiteDefinition extends SiteDefinitionNoSettings {
 interface SitesData {
     [key: string]: SiteDefinition
 }
-
-const blog = browser.extension.getBackgroundPage().console.log
 
 class SiteConfig {
     private static instance: SiteConfig
@@ -59,9 +60,13 @@ class SiteConfig {
     private sites: SitesData = {}
 
     async checkForDynamicConfig(hostname: string): Promise<void> {
-        if (hostname in this.sites) return
+        if (hostname in this.sites && !this.sites[hostname]?.updated) return
 
-        if (hostname.endsWith('readthedocs.io')) {
+        const oldSite = this.sites[hostname] as SiteDefinition | undefined
+        const lastUpdated = oldSite?.updated || 0
+        const now = new Date().valueOf()
+
+        if (hostname.endsWith('readthedocs.io') && now - lastUpdated > 86400000) {
             const response = await fetch(
                 `https://readthedocs.org/projects/${hostname.split('.', 1)}/versions/`,
                 {mode: 'no-cors'}
@@ -75,7 +80,10 @@ class SiteConfig {
             const rtd_regex = /class="module-item-title".*>(.*)<\/a>/g
             const responseText = await response.text()
             const matches = responseText.match(rtd_regex)
-            if (!matches) return
+            if (!matches) {
+                blog("Couldn't find versions in response")
+                return
+            }
 
             const newSite = {
                 regex: '^/en/(?<version>[^/]*)/(?<path>.*)',
@@ -83,6 +91,7 @@ class SiteConfig {
                 options: {
                     version: [] as string[],
                 },
+                updated: now,
             }
 
             let match
@@ -90,19 +99,32 @@ class SiteConfig {
                 newSite.options.version.push(match[1])
             }
 
-            this.sites[hostname] = this.setDefaultSettings(newSite)
+            this.sites[hostname] = this.setDefaultSettings(newSite, oldSite)
 
             await this.saveSites()
         }
     }
 
-    private setDefaultSettings(definition: SiteDefinitionNoSettings): SiteDefinition {
-        ;(definition as SiteDefinition).settings = {
+    private setDefaultSettings(
+        definition: SiteDefinitionNoSettings,
+        oldSite?: SiteDefinition
+    ): SiteDefinition {
+        const newDef = definition as SiteDefinition
+        newDef.settings = oldSite?.settings ?? {
             enabled: true,
-            lang: definition.options.lang && definition.options.lang[0],
-            version: definition.options.version && definition.options.version[0],
+            lang: '',
+            version: '',
         }
-        return definition as SiteDefinition
+
+        newDef.settings.lang = newDef.options.lang?.includes(newDef.settings.lang)
+            ? newDef.settings.lang
+            : newDef.options.lang && newDef.options.lang[0]
+
+        newDef.settings.version = newDef.options.version?.includes(newDef.settings.version)
+            ? newDef.settings.version
+            : newDef.options.version && newDef.options?.version[0]
+
+        return newDef
     }
 
     async loadAndApplyDefaultSettings(): Promise<void> {
@@ -187,6 +209,7 @@ class SiteConfig {
             options: {
                 version: [
                     'master',
+                    '3.2.0',
                     '3.1.0',
                     '3.0.0',
                     '2.2.0',

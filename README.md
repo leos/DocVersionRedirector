@@ -19,7 +19,7 @@ This is useful if you search for a page in the docs and end up on some other ran
 | RSpec       | rspec.info/documentation         | hardcoded |
 | Ruby Docs   | ruby-doc.org                     | hardcoded |
 
-For `dynamic` sites the extension will automatically parse the version numbers and add a configuration that's saved in local storage.
+For `dynamic` sites the extension will automatically parse the version numbers available on the site and add a configuration that's saved in local storage. These are re-checked once a day for any new versions.
 
 For `hardcoded` sites adding a new version or a language means the extension needs to be updated. Feel free to submit a PR.
 
