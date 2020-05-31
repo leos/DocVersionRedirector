@@ -1,9 +1,8 @@
 import Sites, {SiteDefinition} from './sites'
+import {blog} from './util'
 import {browser} from 'webextension-polyfill-ts'
 import pdata = require('./../package.json')
 import manifest = require('./../manifest.json')
-
-const blog = browser.extension.getBackgroundPage().console.log
 
 setUp()
 
