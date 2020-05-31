@@ -265,7 +265,7 @@ class SiteConfig {
             ],
         },
         'rspec.info': {
-            regex: '^/documentation/(?<version>[^/]*/(?<path>.*)',
+            regex: '^/documentation/(?<version>[^/]*)/(?<path>.*)',
             template: '/documentation/${version}/${path}',
             options: {
                 version: [

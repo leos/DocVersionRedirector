@@ -1,6 +1,6 @@
 {
   "name": "doc-version-redirector",
-  "version": "0.11.3",
+  "version": "0.11.4",
   "description": "Automatically redirect to a specific documentation version",
   "engines": {
     "node": ">=13.0.0"
