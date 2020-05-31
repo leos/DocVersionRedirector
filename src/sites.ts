@@ -163,6 +163,7 @@ class SiteConfig {
     getSite(sitename: string): SiteDefinition {
         return this.sites[sitename]
     }
+
     getSites(): SitesData {
         return this.sites
     }
