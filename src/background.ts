@@ -1,13 +1,13 @@
 import Sites, {SiteDefinition} from './sites'
 import {blog} from './util'
-import {browser} from 'webextension-polyfill-ts'
+import {browser, Runtime} from 'webextension-polyfill-ts'
 import pdata = require('./../package.json')
 import manifest = require('./../manifest.json')
 
 setUp()
 
 async function setUp(): Promise<void> {
-    await ensureConfVersion()
+    // await ensureConfVersion()
     await Sites.getInstance()
 
     // If page has been visited (via localStorage cache) and we're going to redirect anyways, do it immediately.
@@ -21,7 +21,7 @@ async function setUp(): Promise<void> {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function MessageHandler(message: any, sender: any) {
+async function MessageHandler(message: any, sender: Runtime.MessageSender) {
     if (message.action === 'checkForRedirect') {
         await checkForRedirect(Sites.getInstanceLocal(), new URL(sender.tab!.url!), sender.tab!.id!)
     } else if (message.action === 'changeSetting') {
@@ -46,7 +46,7 @@ function checkRedirectCache({url}: {url: string}) {
         : {}
 }
 
-async function ensureConfVersion() {
+async function ensureConfVersion(): Promise<void> {
     const {confVersion} = await browser.storage.local.get('confVersion')
     if (confVersion !== pdata.version) {
         await browser.storage.local.clear()
@@ -104,7 +104,7 @@ async function checkForRedirect(sites: Sites, oldURL: URL, tabId: number): Promi
                 localStorage.setItem(`cache-${newUrl}`, '1')
                 await browser.tabs.update(tabId, {url: newUrl})
             } else {
-                // set icon to yellow
+                // set icon to yellow eventually
                 blog(`HEAD request error: ${response.statusText}`)
             }
         }
