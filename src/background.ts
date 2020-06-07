@@ -95,12 +95,13 @@ function rewritePath(
 }
 
 async function checkForRedirect(sites: Sites, oldURL: URL, tabId: number): Promise<void> {
-    browser.pageAction.show(tabId)
     await sites.checkForDynamicConfig(oldURL)
     const siteDef = sites.getSite(oldURL)
     if (!siteDef) return
+    browser.pageAction.show(tabId)
 
     if (siteDef.settings.enabled) {
+        browser.pageAction.setIcon({path: 'icons/icon16.png', tabId: tabId})
         const newUrl = getRedirectURL(siteDef, oldURL)
         if (oldURL.href !== newUrl) {
             const response = await fetch(newUrl, {method: 'HEAD'})
@@ -108,9 +109,11 @@ async function checkForRedirect(sites: Sites, oldURL: URL, tabId: number): Promi
                 localStorage.setItem(`cache-${newUrl}`, '1')
                 await browser.tabs.update(tabId, {url: newUrl})
             } else {
-                // set icon to yellow eventually
+                browser.pageAction.setIcon({path: 'icons/icon16y.png', tabId: tabId})
                 blog(`HEAD request error: ${response.statusText}`)
             }
         }
+    } else {
+        browser.pageAction.setIcon({path: 'icons/icon16b.png', tabId: tabId})
     }
 }

@@ -33,6 +33,16 @@ On every site where the extension is active the icon will light up. If you click
 
 At the moment the settings will reset on every minor version. If you need to reset them manually, simply uninstall the extension.
 
+## Status
+
+The icon color shows the status of the extension.
+
+| Icon                                                                                                  | Status                                  |
+| ----------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| ![icon](https://raw.githubusercontent.com/leos/DocsVersionRedirector/master/static/icons/icon16.png)  | Enabled on this site and redirecting    |
+| ![icon](https://raw.githubusercontent.com/leos/DocsVersionRedirector/master/static/icons/icon16b.png) | Available for this site but not enabled |
+| ![icon](https://raw.githubusercontent.com/leos/DocsVersionRedirector/master/static/icons/icon16y.png) | Attempted to redirect but failed        |
+
 ## Installation
 
 You can install the latest from the [Chrome Web Store](https://chrome.google.com/webstore/detail/nomnkbngkijpffepcgbbofhcnafpkiep/).
