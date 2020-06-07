@@ -18,6 +18,7 @@ This is useful if you search for a page in the docs and end up on some other ran
 | ReadTheDocs | any project on \*.readthedocs.io | dynamic   |
 | RSpec       | rspec.info/documentation         | hardcoded |
 | Ruby Docs   | ruby-doc.org                     | hardcoded |
+| Rust Docs   | any project on docs.rs           | dynamic   |
 
 For `dynamic` sites the extension will automatically parse the version numbers available on the site and add a configuration that's saved in local storage. These are re-checked once a day for any new versions.
 

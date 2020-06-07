@@ -1,15 +1,16 @@
-import Sites, {SiteDefinition} from './sites'
+import Sites from './sites'
+import {blog} from './util'
 import {browser} from 'webextension-polyfill-ts'
-
-const blog = browser.extension.getBackgroundPage().console.log
+import {SiteDefinition} from './site_types'
 
 setUp()
 
 async function setUp(): Promise<void> {
     const sites = await Sites.getInstance()
     const tab = (await browser.tabs.query({active: true, currentWindow: true}))[0]
-    const hostname = new URL(tab.url as string).hostname
-    const siteDef = sites.getSite(hostname)
+    const siteURL = new URL(tab.url as string)
+    const siteDef = sites.getSite(siteURL)
+    if (!siteDef) return
 
     // Inputs
     const enabledCheckbox = document.getElementById('enabledInput') as HTMLInputElement
@@ -17,7 +18,7 @@ async function setUp(): Promise<void> {
     enabledCheckbox.addEventListener('change', e =>
         browser.runtime.sendMessage({
             action: 'changeSetting',
-            site: hostname,
+            site: siteURL,
             name: 'enabled',
             value: (e.target as HTMLInputElement).checked,
             tabID: tab.id,
@@ -25,14 +26,14 @@ async function setUp(): Promise<void> {
     )
 
     await Promise.all([
-        setupChoice('version', hostname, siteDef, tab.id!),
-        setupChoice('lang', hostname, siteDef, tab.id!),
+        setupChoice('version', siteURL, siteDef, tab.id!),
+        setupChoice('lang', siteURL, siteDef, tab.id!),
     ])
 }
 
 async function setupChoice(
     name: string,
-    site: string,
+    siteURL: URL,
     siteDef: SiteDefinition,
     tabID: number
 ): Promise<void> {
@@ -46,7 +47,7 @@ async function setupChoice(
     input.addEventListener('change', e => {
         browser.runtime.sendMessage({
             action: 'changeSetting',
-            site: site,
+            site: siteURL.href,
             name: name,
             value: (e.target as HTMLSelectElement).value,
             tabID: tabID,
