@@ -130,13 +130,9 @@ class SiteConfig {
     }
 
     genKeyForURL(siteURL: URL): string {
-        blog(siteURL)
-        const key =
-            siteURL.hostname === 'docs.rs'
-                ? `${siteURL.hostname}/${siteURL.pathname.split('/', 2)[1]}`
-                : siteURL.hostname
-        blog(key)
-        return key
+        return siteURL.hostname === 'docs.rs'
+            ? `${siteURL.hostname}/${siteURL.pathname.split('/', 2)[1]}`
+            : siteURL.hostname
     }
 
     async updateValue(siteURL: URL, name: string, value: boolean | string): Promise<void> {
@@ -231,6 +227,27 @@ class SiteConfig {
                     after: 'library/io.html#io.StringIO',
                 },
             ],
+        },
+        'nodejs.org': {
+            regex: '^/dist/(?<version>[^/]*)/docs/api/(?<path>.*)',
+            template: '/dist/${version}/docs/api/${path}',
+            options: {
+                version: [
+                    'latest-v14.x',
+                    'latest-v13.x',
+                    'latest-v12.x',
+                    'latest-v11.x',
+                    'latest-v10.x',
+                    'latest-v9.x',
+                    'latest-v8.x',
+                    'latest-v7.x',
+                    'latest-v6.x',
+                    'latest-v5.x',
+                    'latest-v4.x',
+                    'latest-v0.12.x',
+                    'latest-v0.10.x',
+                ],
+            },
         },
         'rspec.info': {
             regex: '^/documentation/(?<version>[^/]*)/(?<path>.*)',
