@@ -29,6 +29,7 @@
         "*://docs.bazel.build/*",
         "*://docs.djangoproject.com/*",
         "*://docs.python.org/*",
+        "*://docs.rs/*",
         "*://rspec.info/documentation/*",
         "*://ruby-doc.org/*",
         "*://*.readthedocs.io/*"

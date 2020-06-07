@@ -1,43 +1,7 @@
 import {blog} from './util'
 import {browser} from 'webextension-polyfill-ts'
-
-interface SiteOptionsVersion {
-    version: string[]
-    [key: string]: string[]
-}
-
-interface SiteOptionsFull extends SiteOptionsVersion {
-    lang: string[]
-}
-
-interface SiteMove {
-    version: string
-    before: string
-    after: string
-}
-
-export interface SiteSettings {
-    enabled: boolean
-    lang: string
-    version: string
-    [key: string]: boolean | string
-}
-
-export interface SiteDefinitionNoSettings {
-    regex: string
-    template: string
-    options: SiteOptionsVersion | SiteOptionsFull
-    moves?: SiteMove[]
-    updated?: number
-}
-
-export interface SiteDefinition extends SiteDefinitionNoSettings {
-    settings: SiteSettings
-}
-
-interface SitesData {
-    [key: string]: SiteDefinition
-}
+import {SitesData, SiteDefinitionNoSettings, SiteDefinition, DynamicSite} from './site_types'
+import {ReadTheDocs, DocsRS} from './dynamic'
 
 class SiteConfig {
     private static instance: SiteConfig
@@ -59,25 +23,34 @@ class SiteConfig {
 
     private sites: SitesData = {}
 
-    async checkForDynamicConfig(hostname: string): Promise<void> {
-        if (hostname in this.sites && !this.sites[hostname]?.updated) return
+    getDynamicSiteClass(siteURL: URL): DynamicSite | null {
+        if (siteURL.hostname.endsWith('readthedocs.io')) {
+            return new ReadTheDocs()
+        } else if (siteURL.hostname === 'docs.rs') {
+            return new DocsRS()
+        }
+        return null
+    }
 
-        const oldSite = this.sites[hostname] as SiteDefinition | undefined
-        const lastUpdated = oldSite?.updated || 0
+    async checkForDynamicConfig(siteURL: URL): Promise<void> {
+        const oldSite = this.getSite(siteURL)
+        if (oldSite && !oldSite.updated) return
+
+        const dynamicSite = this.getDynamicSiteClass(siteURL)
         const now = new Date().valueOf()
 
-        if (hostname.endsWith('readthedocs.io') && now - lastUpdated > 86400000) {
-            const response = await fetch(
-                `https://readthedocs.org/projects/${hostname.split('.', 1)}/versions/`,
-                {mode: 'no-cors'}
-            )
+        const staleness = now - ((oldSite && oldSite!.updated) ?? 0)
+
+        if (dynamicSite && staleness > 86400000) {
+            const response = await fetch(dynamicSite.getDataURL(siteURL), {mode: 'no-cors'})
+
             if (!response.ok) {
                 const responseText = await response.text()
                 blog(response.status)
                 blog(responseText)
                 return
             }
-            const rtd_regex = /class="module-item-title".*>(.*)<\/a>/g
+            const rtd_regex = dynamicSite.getVersionsRegex()
             const responseText = await response.text()
             const matches = responseText.match(rtd_regex)
             if (!matches) {
@@ -86,8 +59,8 @@ class SiteConfig {
             }
 
             const newSite = {
-                regex: '^/en/(?<version>[^/]*)/(?<path>.*)',
-                template: '/en/${version}/${path}',
+                regex: dynamicSite.getNewSiteRegex(),
+                template: dynamicSite.getNewSiteTemplate(),
                 options: {
                     version: [] as string[],
                 },
@@ -99,7 +72,7 @@ class SiteConfig {
                 newSite.options.version.push(match[1])
             }
 
-            this.sites[hostname] = this.setDefaultSettings(newSite, oldSite)
+            this.sites[this.genKeyForURL(siteURL)] = this.setDefaultSettings(newSite, oldSite)
 
             await this.saveSites()
         }
@@ -152,29 +125,23 @@ class SiteConfig {
         await browser.storage.local.set({sites: this.sites})
     }
 
-    enabled(sitename: string): boolean {
-        return this.getSettings(sitename).enabled
+    getSite(siteURL: URL): SiteDefinition | undefined {
+        return this.sites[this.genKeyForURL(siteURL)]
     }
 
-    getSettings(sitename: string): SiteSettings {
-        return this.getSite(sitename).settings
+    genKeyForURL(siteURL: URL): string {
+        blog(siteURL)
+        const key =
+            siteURL.hostname === 'docs.rs'
+                ? `${siteURL.hostname}/${siteURL.pathname.split('/', 2)[1]}`
+                : siteURL.hostname
+        blog(key)
+        return key
     }
 
-    getSite(sitename: string): SiteDefinition {
-        return this.sites[sitename]
-    }
-
-    getSites(): SitesData {
-        return this.sites
-    }
-
-    async updateValue(site: string, name: string, value: boolean | string): Promise<void> {
-        this.sites[site].settings[name] = value
+    async updateValue(siteURL: URL, name: string, value: boolean | string): Promise<void> {
+        this.sites[this.genKeyForURL(siteURL)].settings[name] = value
         await this.saveSites()
-    }
-
-    getSiteNames(): string[] {
-        return Object.keys(this.sites)
     }
 
     private hardcodedSites: {[key: string]: SiteDefinitionNoSettings} = {

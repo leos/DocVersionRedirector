@@ -1,13 +1,14 @@
-import Sites, {SiteDefinition} from './sites'
+import Sites from './sites'
 import {blog} from './util'
-import {browser, Runtime} from 'webextension-polyfill-ts'
+import {browser, Runtime, WebRequest} from 'webextension-polyfill-ts'
 import pdata = require('./../package.json')
 import manifest = require('./../manifest.json')
+import {SiteDefinition} from './site_types'
 
 setUp()
 
 async function setUp(): Promise<void> {
-    // await ensureConfVersion()
+    await ensureConfVersion()
     await Sites.getInstance()
 
     // If page has been visited (via localStorage cache) and we're going to redirect anyways, do it immediately.
@@ -29,14 +30,16 @@ async function MessageHandler(message: any, sender: Runtime.MessageSender) {
             Sites.getInstance(),
             browser.tabs.get(message.tabID),
         ])
-        await sites.updateValue(message.site, message.name, message.value)
+        await sites.updateValue(new URL(message.site), message.name, message.value)
         await checkForRedirect(sites, new URL(tab.url!), tab.id!)
     }
 }
 
-function checkRedirectCache({url}: {url: string}) {
+function checkRedirectCache({url}: {url: string}): WebRequest.BlockingResponse {
     const oldURLObject = new URL(url)
-    const siteDef = Sites.getInstanceLocal().getSite(oldURLObject.hostname)
+    const siteDef = Sites.getInstanceLocal().getSite(oldURLObject)
+    if (!siteDef) return {}
+
     const newUrl = getRedirectURL(siteDef, oldURLObject)
 
     return siteDef.settings.enabled &&
@@ -49,7 +52,7 @@ function checkRedirectCache({url}: {url: string}) {
 async function ensureConfVersion(): Promise<void> {
     const {confVersion} = await browser.storage.local.get('confVersion')
     if (confVersion !== pdata.version) {
-        await browser.storage.local.clear()
+        // await browser.storage.local.clear()
         await browser.storage.local.set({confVersion: pdata.version})
     }
 }
@@ -93,8 +96,9 @@ function rewritePath(
 
 async function checkForRedirect(sites: Sites, oldURL: URL, tabId: number): Promise<void> {
     browser.pageAction.show(tabId)
-    await sites.checkForDynamicConfig(oldURL.hostname)
-    const siteDef = sites.getSite(oldURL.hostname)
+    await sites.checkForDynamicConfig(oldURL)
+    const siteDef = sites.getSite(oldURL)
+    if (!siteDef) return
 
     if (siteDef.settings.enabled) {
         const newUrl = getRedirectURL(siteDef, oldURL)
