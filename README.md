@@ -14,7 +14,7 @@ This is useful if you search for a page in the docs and end up on some other ran
 | Ansible     | docs.ansible.com/ansible         | hardcoded |
 | Bazel       | docs.bazel.build                 | hardcoded |
 | Django      | docs.djangoproject.com           | hardcoded |
-| Node        | nodejs.org/docs                  | hardcoded |
+| Node        | nodejs.org/dist                  | hardcoded |
 | Python      | docs.python.org                  | hardcoded |
 | ReadTheDocs | any project on \*.readthedocs.io | dynamic   |
 | RSpec       | rspec.info/documentation         | hardcoded |
