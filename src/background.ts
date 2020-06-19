@@ -52,7 +52,7 @@ function checkRedirectCache({url}: {url: string}): WebRequest.BlockingResponse {
 async function ensureConfVersion(): Promise<void> {
     const {confVersion} = await browser.storage.local.get('confVersion')
     if (confVersion !== pdata.version) {
-        // await browser.storage.local.clear()
+        await browser.storage.local.clear()
         await browser.storage.local.set({confVersion: pdata.version})
     }
 }
