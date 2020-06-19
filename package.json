@@ -9,8 +9,8 @@
     "dist/"
   ],
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
-    "dev": "webpack --config webpack.dev.js",
+    "build": "webpack --config conf/webpack.prod.js",
+    "dev": "webpack --config conf/webpack.dev.js",
     "lint": "eslint '*/**/*.{js,ts,tsx}'",
     "test": "jest",
     "watch": "webpack -w --config webpack.dev.js",

@@ -1,5 +1,5 @@
-const path = require('path')
 const merge = require('webpack-merge')
+const {project_base} = require('./project-base')
 const common = require('./webpack.common.js')
 const ZipPlugin = require('zip-webpack-plugin')
 
@@ -17,10 +17,10 @@ module.exports.plugins.push(
         filename: 'dist.zip',
         entries: [
             {
-                src: path.join(__dirname, './dist'),
+                src: project_base('./dist'),
                 dist: '/',
             },
         ],
-        path: path.join(__dirname),
+        path: project_base(),
     })
 )
