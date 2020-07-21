@@ -1,3 +1,4 @@
 import {browser} from 'webextension-polyfill-ts'
 
-export const blog = browser.extension.getBackgroundPage().console.log
+const w: any =  browser.extension.getBackgroundPage()
+export const blog = w.console.log
