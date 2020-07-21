@@ -46,13 +46,15 @@ module.exports = {
         new CleanWebpackPlugin({
             cleanAfterEveryBuildPatterns: ['!icons/*', '!**/*.{css,html,json}'],
         }),
-        new CopyWebpackPlugin([
+        new CopyWebpackPlugin({
+            patterns: [
             {
                 from: '**/*',
                 context: 'static/',
             },
-        ]),
-        new CopyWebpackPlugin([
+        ]}),
+        new CopyWebpackPlugin({
+            patterns: [
             {
                 from: 'manifest.json',
                 transform: function (content) {
@@ -66,7 +68,7 @@ module.exports = {
                     )
                 },
             },
-        ]),
+        ]}),
         new HtmlWebpackPlugin({
             chunks: ['background'],
             filename: 'background.html',
