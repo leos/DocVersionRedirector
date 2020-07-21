@@ -26,7 +26,10 @@ class SiteConfig {
     getDynamicSiteClass(siteURL: URL): DynamicSite | null {
         if (siteURL.hostname.endsWith('readthedocs.io')) {
             return new ReadTheDocs()
-        } else if (siteURL.hostname === 'docs.rs') {
+        } else if (
+            siteURL.hostname === 'docs.rs' &&
+            !siteURL.pathname.match(`^/(about|releases|crate)`)
+        ) {
             return new DocsRS()
         }
         return null
