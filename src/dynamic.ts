@@ -6,7 +6,7 @@ export class DocsRS implements DynamicSite {
     }
 
     getVersionsRegex(): RegExp {
-        return /<a href="\/crate\/[^/]+\/[^"]+" class="pure-menu-link">([^<]*)<\/a>\n/g
+        return /<a href="&#x2F;crate&#x2F;[^&]+&#x2F;[^"]+" class="pure-menu-link">\s*([^<]*)\s*<\/a>\n/g
     }
 
     getNewSiteRegex(): string {
