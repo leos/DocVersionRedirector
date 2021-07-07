@@ -147,6 +147,15 @@ class SiteConfig {
             options: {
                 version: [
                     'stable',
+                    '2.1.0',
+                    '2.0.2',
+                    '2.0.1',
+                    '2.0.0',
+                    '1.10.15',
+                    '1.10.14',
+                    '1.10.13',
+                    '1.10.12',
+                    '1.10.11',
                     '1.10.10',
                     '1.10.9',
                     '1.10.8',
@@ -172,7 +181,13 @@ class SiteConfig {
             template: '/versions/${version}/${path}',
             options: {
                 version: [
-                    'master',
+                    'main',
+                    '4.1.0',
+                    '4.0.0',
+                    '3.7.0',
+                    '3.6.0',
+                    '3.5.1',
+                    '3.4.0',
                     '3.3.0',
                     '3.2.0',
                     '3.1.0',
@@ -207,7 +222,7 @@ class SiteConfig {
             template: '/${lang}/${version}/${path}',
             options: {
                 lang: ['en', 'el', 'es', 'fr', 'id', 'ja', 'ko', 'pl', 'pt-br', 'zh-hans'],
-                version: ['dev', '3.1', '3.0', '2.2', '2.1', '2.0', '1.11', '1.10', '1.8'],
+                version: ['dev', '3.2', '3.1', '3.0', '2.2', '2.1', '2.0', '1.11', '1.10', '1.8'],
             },
         },
         'docs.python.org': {
@@ -234,6 +249,7 @@ class SiteConfig {
             template: '/dist/${version}/docs/api/${path}',
             options: {
                 version: [
+                    'latest-v16.x',
                     'latest-v14.x',
                     'latest-v13.x',
                     'latest-v12.x',
@@ -255,6 +271,7 @@ class SiteConfig {
             template: '/documentation/${version}/${path}',
             options: {
                 version: [
+                    '3.10',
                     '3.9',
                     '3.8',
                     '3.7',
@@ -275,6 +292,10 @@ class SiteConfig {
             template: '/${category}-${version}/${path}',
             options: {
                 version: [
+                    '3.0.1',
+                    '3.0.0',
+                    '2.7.3',
+                    '2.7.2',
                     '2.7.1',
                     '2.7.0',
                     '2.6.6',
