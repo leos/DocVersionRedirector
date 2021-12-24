@@ -1,5 +1,5 @@
 import {blog} from './util'
-import {browser} from 'webextension-polyfill-ts'
+import browser from 'webextension-polyfill'
 import {SitesData, SiteDefinitionNoSettings, SiteDefinition, DynamicSite} from './site_types'
 import {ReadTheDocs, DocsRS} from './dynamic'
 

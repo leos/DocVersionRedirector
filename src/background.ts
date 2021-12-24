@@ -1,6 +1,6 @@
 import Sites from './sites'
 import {blog} from './util'
-import {browser, Runtime, WebRequest} from 'webextension-polyfill-ts'
+import browser, {Runtime, WebRequest} from 'webextension-polyfill'
 import pdata = require('./../package.json')
 import manifest = require('./../manifest.json')
 import {SiteDefinition} from './site_types'

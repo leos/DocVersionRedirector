@@ -6,7 +6,7 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     // "experimentalDecorators": true,
-    // "esModuleInterop": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["ES2017", "DOM", "DOM.Iterable"],
     "module": "commonjs",
