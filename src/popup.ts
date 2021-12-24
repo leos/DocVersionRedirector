@@ -1,6 +1,6 @@
 import Sites from './sites'
 import {blog} from './util'
-import {browser} from 'webextension-polyfill-ts'
+import browser from 'webextension-polyfill'
 import {SiteDefinition} from './site_types'
 
 setUp()

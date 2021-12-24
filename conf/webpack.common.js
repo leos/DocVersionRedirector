@@ -83,7 +83,6 @@ module.exports = {
     ],
     resolve: {
         alias: {
-            'webextension-polyfill-ts': project_base('node_modules', 'webextension-polyfill-ts'),
             'webextension-polyfill': project_base('node_modules', 'webextension-polyfill'),
         },
         modules: [project_base('src')],
