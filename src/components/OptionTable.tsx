@@ -49,7 +49,7 @@ export default function OptionTable({ sites, configs }: { sites: SiteDefinition[
                             <td>
                                 <VersionPicker version={version} choices={site.options.versions} updateVersion={updateVersion} />
                             </td>
-                            <td><a href={docRoot} target='_blank'>{docRoot}</a></td>
+                            <td><a href={docRoot} target='_blank' rel="noopener noreferrer">{docRoot}</a></td>
                             {/* <td>{site.id}</td> */}
                         </tr>
                     )
