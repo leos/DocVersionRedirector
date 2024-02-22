@@ -1,47 +1,27 @@
-# ![icon](https://raw.githubusercontent.com/leos/DocsVersionRedirector/master/static/icons/icon48.png) DocsVersionRedirector
+# ![icon](https://raw.githubusercontent.com/leos/DocVersionRedirector/master/public/icon/icon48.png) DocVersionRedirector
 
-Chrome extension that redirects you to the exact version of the documentation that you want.
+A Chrome extension that redirects you to a specific version of the documentation that you want.
 
-For example, DocsVersionRedirector can automatically redirect: https://docs.python.org/2.7/library/index.html to https://docs.python.org/3.6/library/index.html.
+When you're working with a specific software version the docs for a different version that you get via search or links can give you incorrect information. This extension solves that problem by redirecting you to the version of the docs you need.
 
-This is useful if you search for a page in the docs and end up on some other random version of the docs.
+For example, DocVersionRedirector can automatically redirect: https://docs.python.org/2.7/library/index.html to https://docs.python.org/3.6/library/index.html.
+
 
 ## Supported Sites
 
-| Project     | Site                             | Type      |
-| ----------- | -------------------------------- | --------- |
-| Airflow     | airflow.apache.org/docs          | hardcoded |
-| Ansible     | docs.ansible.com/ansible         | hardcoded |
-| Bazel       | docs.bazel.build                 | hardcoded |
-| Django      | docs.djangoproject.com           | hardcoded |
-| Node        | nodejs.org/dist                  | hardcoded |
-| Python      | docs.python.org                  | hardcoded |
-| ReadTheDocs | any project on \*.readthedocs.io | dynamic   |
-| RSpec       | rspec.info/documentation         | hardcoded |
-| Ruby Docs   | ruby-doc.org                     | hardcoded |
-| Rust Docs   | any project on docs.rs           | dynamic   |
+| Project     | Site                             |
+| ----------- | -------------------------------- |
+| Django      | docs.djangoproject.com           |
+| Java SE     | docs.oracle.com/en               |
+| MySQL       | dev.mysql.com/doc/refman         |
+| PostgreSQL  | www.postgresql.org/docs          |
+| Python      | docs.python.org                  |
 
-For `dynamic` sites the extension will automatically parse the version numbers available on the site and add a configuration that's saved in local storage. These are re-checked once a day for any new versions.
-
-For `hardcoded` sites adding a new version or a language means the extension needs to be updated. Feel free to submit a PR.
+More sites coming soon!
 
 ## Configuration
 
-<img align="right" src="https://raw.githubusercontent.com/leos/DocsVersionRedirector/master/screenshots/python.png" />
-
-On every site where the extension is active the icon will light up. If you click it you can change the setting for that site.
-
-At the moment the settings will reset on every minor version. If you need to reset them manually, simply uninstall the extension.
-
-## Status
-
-The icon color shows the status of the extension.
-
-| Icon                                                                                                  | Status                                  |
-| ----------------------------------------------------------------------------------------------------- | --------------------------------------- |
-| ![icon](https://raw.githubusercontent.com/leos/DocsVersionRedirector/master/static/icons/icon16.png)  | Enabled on this site and redirecting    |
-| ![icon](https://raw.githubusercontent.com/leos/DocsVersionRedirector/master/static/icons/icon16b.png) | Available for this site but not enabled |
-| ![icon](https://raw.githubusercontent.com/leos/DocsVersionRedirector/master/static/icons/icon16y.png) | Attempted to redirect but failed        |
+Click on the extension icon to see the settings screen. Here you can choose preferred versions for any of the available projects.
 
 ## Installation
 
@@ -50,22 +30,18 @@ You can install the latest from the [Chrome Web Store](https://chrome.google.com
 If you want to try it out locally, check out this repo, then:
 
 ```
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
-This will assemble the extension into `dist/`.
+The extension is built with [WXT](https://github.com/wxt-dev/wxt) which will automatically open up an instance of your browser and load it unpacked.
 
-Go to `chrome://extensions/`, turn on **Developer mode**, click on **Load unpacked** and select the `dist` folder.
+## Limitations
 
-## Moves
+* In some cases, content has changed locations in the tree and the redirect won't be valid. For example, in 2.0 the page `more-widgets.html` got renamed to `more-extensions.html`. You'll need to disable the redirection. Better support for this situation is coming.
+* This version of DocVersionRedirector doesn't yet support multiple languages and language switching.
 
-This extension has simple support for pages that move between versions. See the `moves` property for `docs.python.org` in `src/sites.ts`. This is only currently available on `hardcoded` sites.
-
-Please [open an issue](https://github.com/leos/DocsVersionRedirector/issues/new) if you're interested in expanding this support.
 
 ## Adding sites
 
-If you'd like to add a `hardcoded` site, please submit a PR adding it to the appropriate spot in `src/sites.ts`. In addition, make sure to add a glob for the hostname in `manifest.json`.
-
-If there's another `dynamic` site you'd like this extension to work with, please [open an issue](https://github.com/leos/DocsVersionRedirector/issues/new).
+If you'd like to add a site, see the definitions in `site_data.ts` and feel free to submit a PR. Make sure to add a glob to `host_permissions` in `wxt.config.ts`.
