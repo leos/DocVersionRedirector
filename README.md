@@ -1,4 +1,4 @@
-# ![icon](https://raw.githubusercontent.com/leos/DocVersionRedirector/master/public/icon/icon48.png) DocVersionRedirector
+# ![icon](https://raw.githubusercontent.com/leos/DocVersionRedirector/master/src/public/icon/icon48.png) DocVersionRedirector
 
 A Chrome extension that redirects you to a specific version of the documentation that you want.
 
