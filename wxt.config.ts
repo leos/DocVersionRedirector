@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
     manifest: {
         host_permissions: [
+            "*://airflow.apache.org/docs/*",
             "*://dev.mysql.com/doc/refman/*",
             "*://docs.bazel.build/*",
             "*://docs.djangoproject.com/*",
