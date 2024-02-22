@@ -1,6 +1,7 @@
 # ![icon](https://raw.githubusercontent.com/leos/DocVersionRedirector/master/src/public/icon/48.png) DocVersionRedirector
 
 ![icon](https://raw.githubusercontent.com/leos/DocVersionRedirector/master/images/screenshot.png)
+
 A Chrome extension that redirects you to a specific version of the documentation that you want.
 
 When you're working with a specific software version the docs for a different version that you get via search or links can give you incorrect information. This extension solves that problem by redirecting you to the version of the docs you need.
