@@ -13,6 +13,7 @@ For example, DocVersionRedirector can automatically redirect: https://docs.pytho
 
 | Project     | Site                             |
 | ----------- | -------------------------------- |
+| Bazel       | docs.bazel.build                 |
 | Django      | docs.djangoproject.com           |
 | Java SE     | docs.oracle.com/en               |
 | MySQL       | dev.mysql.com/doc/refman         |
@@ -46,4 +47,4 @@ The extension is built with [WXT](https://github.com/wxt-dev/wxt) which will aut
 
 ## Adding sites
 
-If you'd like to add a site, see the definitions in `site_data.ts` and feel free to submit a PR. Make sure to add a glob to `host_permissions` in `wxt.config.ts`.
+If you'd like to add a site, see the definitions in [`site_data.ts`](https://github.com/leos/DocVersionRedirector/blob/master/src/utils/site_data.ts) and feel free to submit a PR. Make sure to add a glob to `host_permissions` in `wxt.config.ts`.

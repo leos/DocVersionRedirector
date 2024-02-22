@@ -6,6 +6,7 @@ export default defineConfig({
     manifest: {
         host_permissions: [
             "*://dev.mysql.com/doc/refman/*",
+            "*://docs.bazel.build/*",
             "*://docs.djangoproject.com/*",
             "*://docs.oracle.com/en/*",
             "*://docs.python.org/*",
