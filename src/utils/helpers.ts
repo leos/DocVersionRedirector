@@ -1,5 +1,6 @@
 import { DeclarativeNetRequest } from 'wxt/browser'
-import { SiteDefinition, StoredSiteConfig } from './site_types'
+import { SiteDefinition } from './site_types'
+import { storedConfigs } from './storage'
 
 
 export function createRuleForSite(site: SiteDefinition, newVersion: string): DeclarativeNetRequest.Rule {
@@ -54,11 +55,3 @@ export async function getSiteConfigForID(id: number): Promise<SiteConfig | undef
     const c = configs.find(c => c.id === id)
     return c ? { version: c.v } : undefined
 }
-
-export const storedConfigs = storage.defineItem<StoredSiteConfig[]>(
-    'sync:storedConfigs',
-    {
-        defaultValue: [],
-        version: 1,
-    }
-)
