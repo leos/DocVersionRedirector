@@ -31,7 +31,9 @@ Click on the extension icon to see the settings screen. Here you can choose pref
 
 You can install the latest from the [Chrome Web Store](https://chrome.google.com/webstore/detail/nomnkbngkijpffepcgbbofhcnafpkiep/).
 
-If you want to try it out locally, check out this repo, then:
+If you want to try it out locally or do development, you'll need a recent version of [Node](https://nodejs.org/en/) and [pnpm](https://pnpm.io/) (`brew install node pnpm` on MacOS).
+
+Clone this repo, then:
 
 ```
 pnpm install
