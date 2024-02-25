@@ -2,11 +2,9 @@
 
 ![icon](https://raw.githubusercontent.com/leos/DocVersionRedirector/master/images/screenshot.png)
 
-A Chrome extension that redirects you to a specific version of the documentation that you want.
+DocVersionRedirector is a Chrome extension that redirects you to a specific version of the documentation you need. It solves the problem of getting incorrect information from docs of a different version when working with a specific software version.
 
-When you're working with a specific software version the docs for a different version that you get via search or links can give you incorrect information. This extension solves that problem by redirecting you to the version of the docs you need.
-
-For example, DocVersionRedirector can automatically redirect: https://docs.python.org/2.7/library/index.html to https://docs.python.org/3.6/library/index.html.
+For example, DocVersionRedirector can automatically redirect `https://docs.python.org/2.7/library/index.html` to `https://docs.python.org/3.6/library/index.html`.
 
 
 ## Supported Sites
