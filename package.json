@@ -27,6 +27,6 @@
     "eslint": "^8.57.0",
     "typescript": "^5.3.3",
     "typescript-eslint": "^7.0.2",
-    "wxt": "^0.17.2"
+    "wxt": "^0.17.3"
   }
 }
