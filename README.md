@@ -17,6 +17,7 @@ For example, DocVersionRedirector can automatically redirect: https://docs.pytho
 | Bazel       | docs.bazel.build                 |
 | Django      | docs.djangoproject.com           |
 | Java SE     | docs.oracle.com/en               |
+| Laravel     | laravel.com/docs                 |
 | MySQL       | dev.mysql.com/doc/refman         |
 | PostgreSQL  | www.postgresql.org/docs          |
 | Python      | docs.python.org                  |

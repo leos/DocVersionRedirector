@@ -11,6 +11,7 @@ export default defineConfig({
             "*://docs.djangoproject.com/*",
             "*://docs.oracle.com/en/*",
             "*://docs.python.org/*",
+            "*://laravel.com/*",
             "*://www.postgresql.org/docs/*",
         ],
         permissions: ["declarativeNetRequest", "declarativeNetRequestFeedback", "storage"],
