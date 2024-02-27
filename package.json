@@ -2,7 +2,7 @@
   "name": "doc-version-redirector",
   "description": "Automatically redirect to a specific documentation version",
   "private": true,
-  "version": "0.12.1",
+  "version": "0.12.2",
   "type": "module",
   "scripts": {
     "dev": "wxt",
@@ -19,14 +19,14 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.58",
+    "@types/react": "^18.2.59",
     "@types/react-dom": "^18.2.19",
-    "@typescript-eslint/eslint-plugin": "^7.0.2",
-    "@typescript-eslint/parser": "^7.0.2",
+    "@typescript-eslint/eslint-plugin": "^7.1.0",
+    "@typescript-eslint/parser": "^7.1.0",
     "@vitejs/plugin-react": "^4.2.1",
     "eslint": "^8.57.0",
     "typescript": "^5.3.3",
-    "typescript-eslint": "^7.0.2",
+    "typescript-eslint": "^7.1.0",
     "wxt": "^0.17.3"
   }
 }
