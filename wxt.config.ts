@@ -12,6 +12,7 @@ export default defineConfig({
             "*://docs.oracle.com/en/*",
             "*://docs.python.org/*",
             "*://laravel.com/*",
+            "*://scala-lang.org/api/*",
             "*://www.postgresql.org/docs/*",
         ],
         permissions: ["declarativeNetRequest", "declarativeNetRequestFeedback", "storage"],

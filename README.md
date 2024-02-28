@@ -19,6 +19,7 @@ For example, DocVersionRedirector can automatically redirect `https://docs.pytho
 | MySQL       | dev.mysql.com/doc/refman         |
 | PostgreSQL  | www.postgresql.org/docs          |
 | Python      | docs.python.org                  |
+| Scala       | scala-lang.org/api
 
 More sites coming soon!
 

@@ -205,5 +205,32 @@ export const siteDefinitions: SiteDefinition[] = [
             ]
         }
     },
+    {
+        id: 109,
+        name: 'Scala',
+        host: 'scala-lang.org',
+        regexFilter: '/api/([^/]*)/',
+        substitutionTemplate: '/api/${version}/',
+        options: {
+            versions: [
+                '3.x',
+                '3.3_LTS',
+                '3.4.0',
+                '3.3.2',
+                '3.3.1',
+                '3.3.0',
+                '3.2.2',
+                '3.2.1',
+                '3.2.0',
+                '3.1.3',
+                '3.1.2',
+                '3.1.1',
+                '3.1.0',
+                '3.0.2',
+                '3.0.1',
+                '3.0.0'
+            ]
+        }
+    }
 ]
 
