@@ -1,6 +1,5 @@
 import { SiteDefinition } from "./site_types"
 
-export default defineUnlistedScript(() => { })
 
 export const siteDefinitions: SiteDefinition[] = [
     {

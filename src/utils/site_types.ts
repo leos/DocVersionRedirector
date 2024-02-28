@@ -1,5 +1,3 @@
-export default defineUnlistedScript(() => { })
-
 export interface SiteDefinitionConfigured extends SiteDefinition {
     config: SiteConfig
 }
