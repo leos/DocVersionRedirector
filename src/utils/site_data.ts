@@ -262,6 +262,27 @@ export const siteDefinitions: SiteDefinition[] = [
                 '2.12.1',
             ]
         }
+    },
+    {
+        id: 110,
+        name: 'AngularJS',
+        host: 'code.angularjs.org',
+        regexFilter: '/([^/]*)/docs/api/',
+        substitutionTemplate: '/${version}/docs/api/',
+        options: {
+            versions: [
+                'snapshot',
+                'snapshot-stable',
+                '1.8.2',
+                '1.7.9',
+                '1.6.10',
+                '1.5.11',
+                '1.4.14',
+                '1.3.20',
+                '1.2.32',
+                '1.1.5',
+                '1.0.8',
+            ]
+        }
     }
 ]
-

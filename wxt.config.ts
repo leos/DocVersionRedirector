@@ -6,6 +6,7 @@ export default defineConfig({
     manifest: {
         host_permissions: [
             "*://airflow.apache.org/docs/*",
+            "*://code.angularjs.org/*",
             "*://dev.mysql.com/doc/refman/*",
             "*://docs.bazel.build/*",
             "*://docs.djangoproject.com/*",
