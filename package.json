@@ -2,7 +2,7 @@
   "name": "doc-version-redirector",
   "description": "Automatically redirect to a specific documentation version.",
   "private": true,
-  "version": "0.12.3",
+  "version": "0.12.4",
   "type": "module",
   "scripts": {
     "dev": "wxt",
