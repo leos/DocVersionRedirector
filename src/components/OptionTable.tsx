@@ -12,8 +12,6 @@ export default function OptionTable({ sites, configs }: { sites: SiteDefinition[
                     <td className="left">Name</td>
                     <td >Version</td>
                     <td className="left">Doc Root</td>
-                    {/* <td>Internal ID</td> */}
-
                 </tr>
             </thead>
             <tbody className="left">
