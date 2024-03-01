@@ -1,11 +1,10 @@
 import './OptionTable.css'
 import { SiteDefinition } from '@/utils/site_types'
 import VersionPicker from '@/components/VersionPicker'
-import { createRedirectURL } from '@/utils/helpers'
+import { createRedirectURL, getVersionURL } from '@/utils/helpers'
 import { ChangeEvent, useState } from 'react'
 
 export default function OptionTable({ sites, configs }: { sites: SiteDefinition[], configs: StoredSiteConfig[] | undefined }) {
-    console.log("configs: ", configs)
     return (
         <table>
             <thead>
@@ -21,7 +20,7 @@ export default function OptionTable({ sites, configs }: { sites: SiteDefinition[
                 {sites.map(site => {
                     const config = configs?.find(c => c.id === site.id)
                     const [version, setVersion] = useState(config ? config.v : '')
-                    const docRoot = createRedirectURL(site, version ? version : site.options.versions[0])
+                    const docRoot = createRedirectURL(site, version ? version : getVersionURL(site.options.versions[0]))
 
                     function updateVersion(e: ChangeEvent<HTMLInputElement>) {
                         const newVersion = e.target.value
@@ -30,7 +29,8 @@ export default function OptionTable({ sites, configs }: { sites: SiteDefinition[
                             .then(() => browser.tabs.query({ active: true, currentWindow: true }))
                             .then(tabs => {
                                 if (newVersion && tabs[0].url?.includes(site.host)) {
-                                    browser.tabs.reload(tabs[0].id)
+                                    console.log("reload triggered: ", tabs[0].url, site.host)
+                                    browser.tabs.reload(tabs[0].id, {bypassCache: true })
                                 }
                             })
                             .then(() => {
@@ -50,7 +50,6 @@ export default function OptionTable({ sites, configs }: { sites: SiteDefinition[
                                 <VersionPicker version={version} choices={site.options.versions} updateVersion={updateVersion} />
                             </td>
                             <td><a href={docRoot} target='_blank' rel="noopener noreferrer">{docRoot}</a></td>
-                            {/* <td>{site.id}</td> */}
                         </tr>
                     )
                 })}

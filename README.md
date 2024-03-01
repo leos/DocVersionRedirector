@@ -12,6 +12,7 @@ For example, DocVersionRedirector can automatically redirect `https://docs.pytho
 | Project     | Site                             |
 | ----------- | -------------------------------- |
 | Airflow     | airflow.apache.org/docs          |
+<!-- | Angular     | angular.io/docs                  | -->
 | AngularJS   | code.angularjs.org               |
 | Bazel       | docs.bazel.build                 |
 | Django      | docs.djangoproject.com           |

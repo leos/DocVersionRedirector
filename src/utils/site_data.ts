@@ -214,7 +214,7 @@ export const siteDefinitions: SiteDefinition[] = [
         options: {
             versions: [
                 '3.x',
-                '3.3_LTS',
+                ['3.3_LTS', '3.3 LTS'],
                 '3.4.0',
                 '3.3.2',
                 '3.3.1',
@@ -284,5 +284,34 @@ export const siteDefinitions: SiteDefinition[] = [
                 '1.0.8',
             ]
         }
-    }
+    },
+    // {
+    //     id: 111,
+    //     name: 'Angular',
+    //     host: 'angular.io',
+    //     hostChange: true,
+    //     regexFilter: '([^/.]*)\\.?angular\\.io/',
+    //     substitutionTemplate: '${version}.angular.io/',
+    //     options: {
+    //         versions: [
+    //             ['www', 'stable'],
+    //             'next',
+    //             'rc',
+    //             ['v16', '16'],
+    //             ['v15', '15'],
+    //             ['v14', '14'],
+    //             ['v13', '13'],
+    //             ['v12', '12'],
+    //             ['v11', '11'],
+    //             ['v10', '10'],
+    //             ['v9', '9'],
+    //             ['v8', '8'],
+    //             ['v7', '7'],
+    //             ['v6', '6'],
+    //             ['v5', '5'],
+    //             ['v4', '4'],
+    //             ['v2', '2'],
+    //         ]
+    //     }
+    // }
 ]

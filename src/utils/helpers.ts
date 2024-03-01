@@ -1,13 +1,14 @@
 import { DeclarativeNetRequest } from 'wxt/browser'
-import { SiteDefinition } from './site_types'
+import { SiteDefinition, SiteVersion } from './site_types'
 import { storedConfigs } from './storage'
 
 
 export function createRuleForSite(site: SiteDefinition, newVersion: string): DeclarativeNetRequest.Rule {
+    const filter = site.hostChange ? site.regexFilter : site.host.replaceAll(".", "\\.") + site.regexFilter
     return {
         id: site.id,
         condition: {
-            regexFilter: '^https://' + site.host.replaceAll(".", "\\.") + site.regexFilter,
+            regexFilter: '^https://' + filter,
             resourceTypes: ["main_frame" as const],
         },
         action: {
@@ -19,8 +20,15 @@ export function createRuleForSite(site: SiteDefinition, newVersion: string): Dec
     }
 }
 
+export function getVersionDisplay(version: SiteVersion): string {
+    return Array.isArray(version) ? version[1] : version
+}
+export function getVersionURL(version: SiteVersion): string {
+    return Array.isArray(version) ? version[0] : version
+}
+
 export function createRedirectURL(site: SiteDefinition, newVersion: string): string {
-    return 'https://' + site.host + site.substitutionTemplate.replace('${version}', newVersion)
+    return 'https://'.concat(site.hostChange ? '' : site.host, site.substitutionTemplate.replace('${version}', newVersion))
 }
 
 export async function upsertConfigForSite(site: SiteDefinition, version: string) {
